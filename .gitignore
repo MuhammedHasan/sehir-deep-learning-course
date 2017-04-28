@@ -1,2 +1,4 @@
 assingment-1/aclImdb
 *.ipynb_checkpoints
+*.bin
+*.zip
