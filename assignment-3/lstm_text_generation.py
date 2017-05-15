@@ -25,6 +25,8 @@ import sys
 path = get_file(
     'nietzsche.txt',
     origin='https://s3.amazonaws.com/text-datasets/nietzsche.txt')
+
+path = 'poets/sezai-karakoc.txt'
 text = open(path).read().lower()
 print('corpus length:', len(text))
 
@@ -73,14 +75,15 @@ def sample(preds, temperature=1.0):
 
 
 # train the model, output generated text after each iteration
-for iteration in range(1, 60):
+for iteration in range(1, 6):
     print()
     print('-' * 50)
     print('Iteration', iteration)
-    checkpointer = ModelCheckpoint(
-        filepath="weights.hdf5", verbose=1, save_best_only=True)
 
-    model.fit(X, y, batch_size=128, epochs=1, callbacks=[checkpointer])
+    filepath="models/weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
+    checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+
+    model.fit(X, y, batch_size=128, epochs=10, callbacks=[checkpoint])
 
     start_index = random.randint(0, len(text) - maxlen - 1)
 
