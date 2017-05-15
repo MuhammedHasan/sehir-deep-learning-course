@@ -2,3 +2,5 @@ assingment-1/aclImdb
 *.ipynb_checkpoints
 *.bin
 *.zip
+__pycache__
+env/
