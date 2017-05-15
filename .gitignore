@@ -2,7 +2,5 @@ assingment-1/aclImdb
 *.ipynb_checkpoints
 *.bin
 *.zip
-*__pycache__
-*env/
-assignment-3/poets/*
-*~
+__pycache__
+env/
