@@ -4,7 +4,7 @@ import scrapy
 class Antoloji(scrapy.Spider):
     name = 'Antoloji'
     url = 'https://www.antoloji.com'
-    poet = 'cahit-zarifoglu'
+    poet = 'oktay-rifat'
 
     def start_requests(self):
         yield scrapy.Request('%s/%s/siirleri/' % (self.url, self.poet),
