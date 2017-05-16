@@ -5,6 +5,7 @@ from keras.callbacks import ModelCheckpoint
 import numpy as np
 import random
 import pickle
+import os
 
 
 class TextGenerator:
@@ -45,8 +46,6 @@ class TextGenerator:
         model = Sequential()
         model.add(LSTM(128, input_shape=(self.seq_len, self.vocab_len)))
         model.add(Dropout(0.2))
-        #        model.add(LSTM(256))
-        #        model.add(Dropout(0.2))
         model.add(Dense(self.vocab_len))
         model.add(Activation('softmax'))
         model.compile(loss='categorical_crossentropy', optimizer='adam')
@@ -96,9 +95,8 @@ class TextGenerator:
 
 text_generator = TextGenerator(epoch=1)
 
-X, y = text_generator.read_data(['poets/sample.txt'])
+X, y = text_generator.read_data('poets/%s' % f for f in os.listdir('poets'))
 text_generator.build_nn()
-# text_generator.fit(X, y)
-text_generator.load('models/weights-improvement-00-3.3960.hdf5')
+text_generator.fit(X, y)
 
 print(text_generator.generate())
