@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Dense, Activation, LSTM, Dropout
+from keras.layers import Dense, Activation, LSTM, Dropout, SimpleRNN, GRU
 from keras.callbacks import ModelCheckpoint
 
 import numpy as np
@@ -9,10 +9,11 @@ import os
 
 
 class TextGenerator:
-    def __init__(self, seq_len=50, temperature=0.8, epoch=50):
+    def __init__(self, seq_len=50, temperature=0.8, epoch=50, rnn_layer=LSTM):
         self.seq_len = seq_len
         self.temperature = temperature
         self.epochs = epoch
+        self.rnn_layer = rnn_layer
 
     def read_data(self, files_paths):
         self.text = '\n'.join(open(path).read()
@@ -44,7 +45,8 @@ class TextGenerator:
 
     def build_nn(self):
         model = Sequential()
-        model.add(LSTM(128, input_shape=(self.seq_len, self.vocab_len)))
+        model.add(
+            self.rnn_layer(128, input_shape=(self.seq_len, self.vocab_len)))
         model.add(Dropout(0.2))
         model.add(Dense(self.vocab_len))
         model.add(Activation('softmax'))
@@ -93,10 +95,16 @@ class TextGenerator:
         self.model.load_weights(path)
 
 
-text_generator = TextGenerator(epoch=1)
+# text_generator = TextGenerator(epoch=1)
 
-X, y = text_generator.read_data('poets/%s' % f for f in os.listdir('poets'))
-text_generator.build_nn()
+# X, y = text_generator.read_data('poets/%s' % f for f in os.listdir('poets'))
+# text_generator.build_nn()
+# text_generator.fit(X, y)
+
+# print(text_generator.generate())
+
+text_generator = TextGenerator(rnn_layer=LSTM, epoch=20)
+X, y = text_generator.read_data(['poets/sezai-karakoc.txt'])
 text_generator.fit(X, y)
 
 print(text_generator.generate())
